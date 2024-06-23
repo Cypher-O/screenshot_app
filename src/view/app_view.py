@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QDesktopWidget
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QDesktopWidget, QHBoxLayout, QVBoxLayout
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 
@@ -12,28 +12,44 @@ class AppView(QWidget):
     def init_ui(self):
         self.setWindowTitle(self.title)
         self.setWindowIcon(QIcon('assets/icon.png'))
-        self.setGeometry(100, 100, 400, 300)
+        self.setGeometry(100, 100, 600, 500)  # Increased window size
 
-        self.label = QLabel(self)
-        self.label.setGeometry(10, 10, 380, 280)
+        # Central widget container
+        main_layout = QVBoxLayout()
+        self.setLayout(main_layout)
+
+        # Image label with more space
+        self.label = QLabel()
         self.label.setAlignment(Qt.AlignCenter)
+        self.label.setMinimumSize(500, 400)  # Set a minimum size for the image label
         self.label.setPixmap(QPixmap('assets/screenshot_placeholder.png'))
+        main_layout.addWidget(self.label, alignment=Qt.AlignCenter)
 
-        self.full_screen_button = QPushButton('Full Screen', self)
+        # Button container layout
+        button_layout = QHBoxLayout()
+        main_layout.addLayout(button_layout)
+
+        # Full Screen button
+        self.full_screen_button = QPushButton('Full Screen')
         self.full_screen_button.setToolTip('Capture entire screen')
-        self.full_screen_button.move(20, 260)
+        button_layout.addWidget(self.full_screen_button)
 
-        self.area_button = QPushButton('Select Area', self)
+        # Select Area button
+        self.area_button = QPushButton('Select Area')
         self.area_button.setToolTip('Capture a selected area')
-        self.area_button.move(120, 260)
+        button_layout.addWidget(self.area_button)
 
-        self.window_button = QPushButton('Select Window', self)
+        # Select Window button
+        self.window_button = QPushButton('Select Window')
         self.window_button.setToolTip('Capture a selected window')
-        self.window_button.move(220, 260)
+        button_layout.addWidget(self.window_button)
 
+        # Center the window on the screen
         self.center()
+
+        # Show the window
         self.show()
-    
+
     def center(self):
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
@@ -43,5 +59,5 @@ class AppView(QWidget):
     def update_image(self, image_path):
         pixmap = QPixmap(image_path)
         if pixmap.isNull():
-            pixmap = QPixmap('screenshot_placeholder.png')
+            pixmap = QPixmap('assets/screenshot_placeholder.png')
         self.label.setPixmap(pixmap.scaled(self.label.size(), Qt.KeepAspectRatio))

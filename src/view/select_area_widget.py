@@ -9,7 +9,7 @@ class SelectAreaWidget(QWidget):
         super().__init__()
         self.rubberBand = QRubberBand(QRubberBand.Rectangle, self)
         self.origin = QPoint()
-        self.setWindowOpacity(0.3)
+        self.setWindowOpacity(0.08)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setCursor(QCursor(Qt.CrossCursor))

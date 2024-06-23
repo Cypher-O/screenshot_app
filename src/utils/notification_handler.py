@@ -13,6 +13,8 @@ try:
 except ImportError:
     plyer_notification = None
 
+from utils.config import NOTIFICATION_ERROR_TITLE, NOTIFICATION_ERROR_MESSAGE, DBUS_ERROR_MESSAGE, SCREENSHOT_NOTIFICATION_TITLE, SCREENSHOT_NOTIFICATION_MESSAGE, APPLICATION_NAME
+
 class NotificationHandler:
 
     def __init__(self):
@@ -24,7 +26,7 @@ class NotificationHandler:
         elif plyer_notification:
             self._show_plyer_notification(title, message)
         else:
-            QMessageBox.warning(None, "Notification Error", "Neither dbus nor plyer notification support is available.")
+            QMessageBox.warning(None, NOTIFICATION_ERROR_TITLE, NOTIFICATION_ERROR_MESSAGE)
 
     def _show_dbus_notification(self, title, message):
         try:
@@ -33,9 +35,9 @@ class NotificationHandler:
             interface = dbus.Interface(notifications, 'org.freedesktop.Notifications')
             
             app_name = QApplication.applicationName() 
-            interface.Notify('Screenshot App', 0, '', title, message, [], {}, -1)
+            interface.Notify(APPLICATION_NAME, 0, '', title, message, [], {}, -1)
         except dbus.exceptions.DBusException as e:
-            print(f"DBus Error: {e}")
+            print(f"{DB} {e}")
             if plyer_notification:
                 self._show_plyer_notification(title, message)
 
@@ -43,6 +45,6 @@ class NotificationHandler:
         plyer_notification.notify(
             title=title,
             message=message,
-            app_name='Screenshot App',
+            app_name=APPLICATION_NAME,
             timeout=10,
         )
